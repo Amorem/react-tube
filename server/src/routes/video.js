@@ -12,7 +12,9 @@ function getVideoRoutes() {
   router.get("/search", searchVideos);
 
   router.post("/", protect, addVideo);
-  router.post("/:videoId/comment", protect, addComment);
+  router.post("/:videoId/comments", protect, addComment);
+
+  router.delete("/:videoId/comments/:commentId", protect, deleteComment);
 
   return router;
 }
@@ -165,7 +167,27 @@ async function addComment(req, res, next) {
   res.status(200).json({ comment });
 }
 
-async function deleteComment(req, res) {}
+async function deleteComment(req, res) {
+  const comment = await prisma.comment.findUnique({
+    where: {
+      id: req.params.commentId,
+    },
+    select: {
+      userId: true,
+    },
+  });
+
+  if (comment.userId !== req.user.id) {
+    return res.status(401).send("Your are not authorized to do this action");
+  }
+
+  const commentDeleted = await prisma.comment.delete({
+    where: {
+      id: req.params.commentId,
+    },
+  });
+  res.status(200).json({ commentDeleted });
+}
 
 async function addVideoView(req, res, next) {}
 
