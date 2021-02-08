@@ -43,8 +43,24 @@ async function googleLogin(req, res) {
 }
 
 async function me(req, res) {
-  console.log("Me", req.user);
-  res.status(200).json({ user: req.user });
+  const subscriptions = await prisma.subscription.findMany({
+    where: {
+      subscriberId: {
+        equals: req.user.id,
+      },
+    },
+  });
+  const channelsIds = subscriptions.map((sub) => sub.subscribedToId);
+  const channels = await prisma.user.findMany({
+    where: {
+      id: {
+        in: channelsIds,
+      },
+    },
+  });
+  const user = req.user;
+  user.channels = channels;
+  res.status(200).json({ user });
 }
 
 function signout(req, res) {
