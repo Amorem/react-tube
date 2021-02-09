@@ -4,8 +4,12 @@ import GoogleAuth from "./GoogleAuth";
 import { NavLink } from "react-router-dom";
 import { AppsIcon, HamburgerIcon, LogoIcon, SettingsIcon } from "./Icons";
 import Search from "./Search";
+import { useAuth } from "../context/auth-context";
+import UserDropdown from "./UserDropdown";
 
 function Navbar({ toggleSidebarOpen }) {
+  const user = useAuth();
+  console.log("user", user);
   return (
     <Wrapper>
       <div className="logo flex-row">
@@ -34,10 +38,7 @@ function Navbar({ toggleSidebarOpen }) {
         <li>
           <SettingsIcon />
         </li>
-        <li>
-          {" "}
-          <GoogleAuth />
-        </li>
+        <li>{user ? <UserDropdown user={user} /> : <GoogleAuth />}</li>
       </ul>
     </Wrapper>
   );
