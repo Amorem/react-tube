@@ -6,10 +6,11 @@ import { AppsIcon, HamburgerIcon, LogoIcon, SettingsIcon } from "./Icons";
 import Search from "./Search";
 import { useAuth } from "../context/auth-context";
 import UserDropdown from "./UserDropdown";
+import UploadVideo from "./UploadVideo";
 
 function Navbar({ toggleSidebarOpen }) {
   const user = useAuth();
-  console.log("user", user);
+
   return (
     <Wrapper>
       <div className="logo flex-row">
@@ -32,12 +33,8 @@ function Navbar({ toggleSidebarOpen }) {
       <Search />
 
       <ul>
-        <li>
-          <AppsIcon />
-        </li>
-        <li>
-          <SettingsIcon />
-        </li>
+        <li>{user ? <UploadVideo /> : <AppsIcon />}</li>
+        <li>{user ? <AppsIcon /> : <SettingsIcon />}</li>
         <li>{user ? <UserDropdown user={user} /> : <GoogleAuth />}</li>
       </ul>
     </Wrapper>
