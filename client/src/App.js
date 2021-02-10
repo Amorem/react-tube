@@ -30,7 +30,7 @@ function App() {
       <Container>
         <Switch>
           <Route exact path="/" component={Home} />
-          <Route path="/watch:videoId" component={WatchVideo} />
+          <Route path="/watch/:videoId" component={WatchVideo} />
           <Route path="/channel/:channelId" component={Channel} />
           <Route path="/results/:searchQuery" component={SearchResults} />
           <Route path="/feed/trending" component={Trending} />
