@@ -16,9 +16,11 @@ function UploadVideo() {
   const closeModal = () => setShowModal(false);
 
   async function handleUploadVideo(event) {
-    const file = event.target.files[0];
-
     event.persist();
+    const file = event.target.files[0];
+    const defaultTitle = path.basename(file.name, path.extname(file.name));
+    setDefaultTitle(defaultTitle);
+
     if (file) {
       const filesize = file.size / 1000000;
       if (filesize > 50) {
@@ -34,8 +36,7 @@ function UploadVideo() {
         file,
         preset: "vc8yiebl",
       });
-      const defaultTitle = path.basename(file.name, path.extname(file.name));
-      setDefaultTitle(defaultTitle);
+
       const extension = path.extname(url);
       setThumbnail(url.replace(extension, ".jpg"));
       setUrl(url);
