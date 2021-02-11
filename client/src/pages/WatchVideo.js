@@ -8,7 +8,12 @@ import NoResults from "../components/NoResults";
 import VideoPlayer from "../components/VideoPlayer";
 import Button from "../styles/Button";
 import Wrapper from "../styles/WatchVideo";
-import { client, dislikeVideo, likeVideo } from "../utils/api-client";
+import {
+  client,
+  dislikeVideo,
+  likeVideo,
+  toggleSubscribeUser,
+} from "../utils/api-client";
 import Skeleton from "../skeletons/WatchVideoSkeleton";
 import { formatCreatedAt } from "../utils/date";
 import VideoCard from "../components/VideoCard";
@@ -44,6 +49,10 @@ function WatchVideo() {
 
   function handleDislikeVideo(videoId) {
     dislikeVideo(videoId);
+  }
+
+  function handleToggleSubscribe(channelId) {
+    toggleSubscribeUser(channelId);
   }
 
   return (
@@ -95,10 +104,17 @@ function WatchVideo() {
             </div>
 
             {!video.isVideoMine && !video.isSubscribe && (
-              <Button>Subscribe</Button>
+              <Button oncClick={() => handleToggleSubscribe(video.user.id)}>
+                Subscribe
+              </Button>
             )}
             {!video.isVideoMine && video.isSubscribe && (
-              <Button>Subscribed</Button>
+              <Button
+                grey
+                oncClick={() => handleToggleSubscribe(video.user.id)}
+              >
+                Subscribed
+              </Button>
             )}
           </div>
 
