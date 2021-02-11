@@ -9,19 +9,27 @@ import VideoPlayer from "../components/VideoPlayer";
 import Button from "../styles/Button";
 import Wrapper from "../styles/WatchVideo";
 import { client } from "../utils/api-client";
-import Skelton from "../skeletons/WatchVideoSkeleton";
+import Skeleton from "../skeletons/WatchVideoSkeleton";
 import { formatCreatedAt } from "../utils/date";
+import VideoCard from "../components/VideoCard";
 
 function WatchVideo() {
   const { videoId } = useParams();
-  const { data: video, isLoading } = useQuery(["WatchVideo", videoId], () =>
-    client.get(`/videos/${videoId}`).then((res) => res.data.video)
+
+  const { data: video, isLoading: isLoadingVideo } = useQuery(
+    ["WatchVideo", videoId],
+    () => client.get(`/videos/${videoId}`).then((res) => res.data.video)
   );
 
-  if (isLoading) {
-    return <Skelton />;
+  const { data: next, isLoading: isLoadingNext } = useQuery(
+    ["WatchVideo", "UpNext"],
+    () => client.get("/videos").then((res) => res.data.videos)
+  );
+
+  if (isLoadingVideo || isLoadingNext) {
+    return <Skeleton />;
   }
-  if (!isLoading && !video) {
+  if (!isLoadingVideo && !video) {
     return (
       <NoResults
         title="Page not found"
@@ -37,7 +45,7 @@ function WatchVideo() {
     >
       <div className="video-container">
         <div className="video">
-          {!isLoading && <VideoPlayer video={video} />}
+          {!isLoadingVideo && <VideoPlayer video={video} />}
         </div>
 
         <div className="video-info">
@@ -92,7 +100,12 @@ function WatchVideo() {
 
       <div className="related-videos">
         <h3 className="up-next">Up Next</h3>
-        Up Next Videos
+        {next
+          .filter((v) => v.id !== video.id)
+          .slice(0, 10)
+          .map((video) => (
+            <VideoCard key={video.id} hideAvatar video={video} />
+          ))}
       </div>
     </Wrapper>
   );
