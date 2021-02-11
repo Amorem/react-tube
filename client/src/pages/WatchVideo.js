@@ -17,9 +17,12 @@ import {
 import Skeleton from "../skeletons/WatchVideoSkeleton";
 import { formatCreatedAt } from "../utils/date";
 import VideoCard from "../components/VideoCard";
+import useAuthAction from "../hooks/use-auth-action";
 
 function WatchVideo() {
   const { videoId } = useParams();
+
+  const handleAuthAction = useAuthAction();
 
   const { data: video, isLoading: isLoadingVideo } = useQuery(
     ["WatchVideo", videoId],
@@ -44,15 +47,15 @@ function WatchVideo() {
   }
 
   function handleLikeVideo(videoId) {
-    likeVideo(videoId);
+    handleAuthAction(likeVideo, videoId);
   }
 
   function handleDislikeVideo(videoId) {
-    dislikeVideo(videoId);
+    handleAuthAction(dislikeVideo, videoId);
   }
 
   function handleToggleSubscribe(channelId) {
-    toggleSubscribeUser(channelId);
+    handleAuthAction(toggleSubscribeUser, channelId);
   }
 
   return (
