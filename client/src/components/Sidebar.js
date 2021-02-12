@@ -1,6 +1,8 @@
 // @ts-nocheck
 import React from "react";
 import { NavLink } from "react-router-dom";
+import { useAuth } from "../context/auth-context";
+import Subscriptions from "./Subscriptions";
 import Wrapper from "../styles/Sidebar";
 import {
   HistoryIcon,
@@ -14,6 +16,7 @@ import {
 import SidebarAuth from "./SidebarAuth";
 
 function Sidebar({ isSidebarOpen }) {
+  const user = useAuth();
   return (
     <Wrapper open={isSidebarOpen}>
       <NavLink exact to="/" activeClassName="active">
@@ -69,7 +72,7 @@ function Sidebar({ isSidebarOpen }) {
 
       <div className="divider"></div>
 
-      <SidebarAuth />
+      {user ? <Subscriptions user={user} /> : <SidebarAuth />}
     </Wrapper>
   );
 }
